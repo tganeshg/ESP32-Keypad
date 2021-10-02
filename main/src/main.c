@@ -16,7 +16,6 @@
 
 #define	FALSE		0
 #define	TRUE		1
-#define	STATUS_LED	2
 
 #define EXAMPLE_ESP_WIFI_SSID      "HUAWEI-Ganesh"
 #define EXAMPLE_ESP_WIFI_PASS      "ganesh234"
@@ -157,22 +156,6 @@ void wifi_init_sta(void)
     vEventGroupDelete(s_wifi_event_group);
 }
 
-static int gpioInit(void)
-{
-	gpio_config_t conf;
-
-	//STATUS LED
-	conf.pin_bit_mask 	= 1ULL << STATUS_LED;
-	conf.mode  			= GPIO_MODE_OUTPUT;
-	conf.pull_up_en 	= GPIO_PULLUP_DISABLE;
-	conf.pull_down_en 	= GPIO_PULLDOWN_DISABLE;
-	conf.intr_type 		= GPIO_INTR_DISABLE;
-	gpio_config(&conf);
-
-	ESP_LOGI(TAG,"GPIO init success !");
-	return TRUE;
-}
-
 int kGpioInit(void)
 {
 	// considering rows, hence o/p mode
@@ -237,11 +220,9 @@ void app_main(void)
     ESP_ERROR_CHECK(ret);
 
 	ESP_LOGI(TAG, "IDF version: %s", esp_get_idf_version());
-	//gpioInit();
     wifi_init_sta();
 
 	retn = setKeypadInfo(NUM_ROWS,NUM_COLS,(const uint8_t *)keyMatch,kGpioInit,ctrlGpio);
-	ESP_LOGI(TAG, ">>>>>>>>>>>>> setKeypadInfo: %d", retn);
 	keyPadInit();
 
 	/* Live Loop */
